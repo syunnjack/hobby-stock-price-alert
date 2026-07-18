@@ -1,0 +1,7 @@
+# Hobby Stock Price Alert
+
+在庫復活、価格下落、予約開始、再販を通知し、ECアフィリエイトと有料通知へつなげる。
+
+Notification channels: LINE, X, email, Slack
+Revenue: EC affiliate, 有料通知, 買取送客, 広告枠, スポンサー
+Primary categories: 在庫復活, 価格下落, 予約開始, 再販, トレカ

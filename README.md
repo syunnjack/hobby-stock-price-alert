@@ -8,7 +8,7 @@ Recommended repository name: `hobby-stock-price-alert`
 
 ## Domain candidates
 
-First candidate: `hobbystock.jp`
+Confirmed domain: `hobbystock.jp`
 
 Other candidates:
 

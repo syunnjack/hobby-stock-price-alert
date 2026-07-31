@@ -8,11 +8,10 @@ Recommended repository name: `hobby-stock-price-alert`
 
 ## Domain candidates
 
-Confirmed domain: `https://syunnjack.github.io/hobby-stock-price-alert/`
+Confirmed domain: `hobby-stock.jp`
 
 Other candidates:
 
-- `https://syunnjack.github.io/hobby-stock-price-alert/`
 - `figurealert.jp`
 - `cardstock.jp`
 - `gamezaiko.jp`

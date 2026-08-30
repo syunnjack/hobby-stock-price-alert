@@ -1,4 +1,2 @@
 User-agent: *
-Allow: /
-
-Sitemap: https://hobby-stock-price-alert.vercel.app/sitemap.xml
+Disallow: /

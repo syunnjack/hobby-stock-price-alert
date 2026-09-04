@@ -22,25 +22,6 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: 診断（dist の有無と接続確認）
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-        run: |
-          echo "--- dist ---"; ls -la dist | head -10 || echo "dist が無い"
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p 10022 "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
-          echo "--- 鍵の形 ---"; head -1 ~/.ssh/deploy_key | cut -c1-40; wc -l < ~/.ssh/deploy_key
-          echo "--- 接続 ---"
-          set +e
-          out=$(ssh -o BatchMode=yes -o ConnectTimeout=15 -i ~/.ssh/deploy_key -p 10022 "$SSH_USERNAME@$SSH_HOST" 'ls -1 ~' 2>&1)
-          code=$?
-          echo "$out" | sed -e "s/$SSH_HOST/HOST/g" -e "s/$SSH_USERNAME/USER/g"
-          echo "ssh の終了コード: $code"
-
       - name: Deploy to Xserver via rsync
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -51,4 +32,16 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p 10022 "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+          # 置き先が無いまま rsync すると、終了コード1だけが返って理由が分からない。
+          # 2026-08-04 以降のデプロイが全部これで、サーバーに hobby-stock.jp の
+          # ディレクトリが無いことに気づくまで1か月かかった。先に確かめる。
+          if ! ssh -o BatchMode=yes -o ConnectTimeout=15 -i ~/.ssh/deploy_key -p 10022                  "$SSH_USERNAME@$SSH_HOST" 'test -d ~/hobby-stock.jp/public_html'; then
+            echo "::error::サーバーに hobby-stock.jp/public_html がありません。"
+            echo "Xserver の管理画面でドメイン hobby-stock.jp を追加し、"
+            echo "無料SSLを発行してください（いまHTTPSが応答しません）。"
+            echo "リポジトリ側では直せません。"
+            exit 1
+          fi
+
           rsync -avz --delete -e "ssh -i ~/.ssh/deploy_key -p 10022" ./dist/ "$SSH_USERNAME@$SSH_HOST:/home/xs501620/hobby-stock.jp/public_html/"

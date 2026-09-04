@@ -36,7 +36,7 @@ jobs:
           echo "--- 鍵の形 ---"; head -1 ~/.ssh/deploy_key | cut -c1-40; wc -l < ~/.ssh/deploy_key
           echo "--- 接続 ---"
           set +e
-          out=$(ssh -o BatchMode=yes -o ConnectTimeout=15 -i ~/.ssh/deploy_key -p 10022 "$SSH_USERNAME@$SSH_HOST" 'ls -d ~/hobby-stock.jp ~/hobby-stock.jp/public_html 2>&1; echo "---"; ls ~ | head -20' 2>&1)
+          out=$(ssh -o BatchMode=yes -o ConnectTimeout=15 -i ~/.ssh/deploy_key -p 10022 "$SSH_USERNAME@$SSH_HOST" 'ls -1 ~' 2>&1)
           code=$?
           echo "$out" | sed -e "s/$SSH_HOST/HOST/g" -e "s/$SSH_USERNAME/USER/g"
           echo "ssh の終了コード: $code"
